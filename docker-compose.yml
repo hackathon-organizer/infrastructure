@@ -34,7 +34,7 @@ services:
   
   ho-vault:
     container_name: ho-vault
-    image: vault:1.11.2
+    image: vault:1.12.0
     ports:
       - "8200:8200"
     restart: always
