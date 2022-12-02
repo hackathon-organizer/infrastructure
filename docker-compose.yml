@@ -110,6 +110,13 @@ services:
       - POSTGRESQL_USERNAME=postgres
       - POSTGRESQL_PASSWORD=qwerty
       - POSTGRESQL_DATABASE=messaging_db
+
+  ho-media-server:
+    image: openvidu/openvidu-dev:2.24.0
+    ports:
+      - '4443:4443'
+    environment:
+      - OPENVIDU_SECRET=secret    
           
 volumes:
   postgresql_master_data:
