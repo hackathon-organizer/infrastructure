@@ -3,10 +3,11 @@ version: '3.1'
 services:
   ho-rabbitmq3:
       container_name: "ho-rabbitmq"
-      image: rabbitmq:3.10.7-management-alpine
+      image: rabbitmq:3.11.9-management-alpine
       environment:
           - RABBITMQ_DEFAULT_USER=guest
           - RABBITMQ_DEFAULT_PASS=guest
+      restart: always
       ports:
           - '5672:5672'
           - '15672:15672'
@@ -28,9 +29,11 @@ services:
       - KK_TO_RMQ_PASSWORD=guest
       - KK_TO_RMQ_VHOST=/
       - KEYCLOAK_IMPORT=/tmp/realm-export.json
+    restart: always
     volumes:
       - ./resources/keycloak-to-rabbit-3.0.jar:/opt/jboss/keycloak/standalone/deployments/keycloak-to-rabbit-3.0.jar
       - ./configs/keycloak/realm-export.json:/tmp/realm-export.json
+      - ./configs/keycloak/themes/ho-theme:/opt/jboss/keycloak/themes/ho-theme
   
   ho-vault:
     container_name: ho-vault
@@ -40,6 +43,7 @@ services:
     restart: always
     environment: 
       VAULT_DEV_LISTEN_ADDRESS: '0.0.0.0:8200'
+    restart: always
     volumes:
       - ./configs/vault/volumes/logs:/vault/logs
       - ./configs/vault/volumes/file:/vault/file
@@ -55,13 +59,31 @@ services:
       - 8888:8888
     environment:
       - VAULT_URL=ho-vault
-      - VAULT_PORT=8200  
+      - VAULT_PORT=8200
+    restart: always 
+
+  ho-api-gateway:
+    container_name: ho-api-gateway
+    image: api-gateway:1.0  
+    ports:
+      - '9090:9090'
+    environment:
+      - CONFIG_SERVER_HOST=ho-config-server
+      - CONFIG_SERVER_PORT=8888
+    restart: always
+    depends_on:
+      - ho-discovery-service
+      - ho-config-server
 
   ho-discovery-service:
     container_name: ho-discovery-service
-    image: discovery-service:0.1
+    image: discovery-service:1.0
     ports:
       - 8761:8761
+    environment:
+      - CONFIG_SERVER_HOST=ho-config-server
+      - CONFIG_SERVER_PORT=8888
+    restart: always
 
   ho-postgresql-hackathon-master:
     image: docker.io/bitnami/postgresql:14
@@ -71,6 +93,7 @@ services:
       - POSTGRESQL_USERNAME=postgres
       - POSTGRESQL_PASSWORD=qwerty
       - POSTGRESQL_DATABASE=hackathon_db
+    restart: always
 
   ho-postgresql-user-master:
     image: docker.io/bitnami/postgresql:14
@@ -86,6 +109,7 @@ services:
       - POSTGRESQL_PASSWORD=qwerty
       - POSTGRESQL_DATABASE=user_db
       - ALLOW_EMPTY_PASSWORD=yes
+    restart: always
 
   ho-postgresql-user-slave:
     image: docker.io/bitnami/postgresql:14
@@ -101,6 +125,7 @@ services:
         - POSTGRESQL_PASSWORD=qwerty
         - POSTGRESQL_MASTER_PORT_NUMBER=5432
         - ALLOW_EMPTY_PASSWORD=yes
+    restart: always
 
   ho-postgresql-messaging-master:
     image: docker.io/bitnami/postgresql:14
@@ -110,7 +135,61 @@ services:
       - POSTGRESQL_USERNAME=postgres
       - POSTGRESQL_PASSWORD=qwerty
       - POSTGRESQL_DATABASE=messaging_db
-          
+    restart: always
+
+  ho-media-server:
+    image: openvidu/openvidu-dev:2.24.0
+    ports:
+      - '4443:4443'
+    environment:
+      - OPENVIDU_SECRET=secret
+    restart: always
+
+  ho-hackathon-write-service:
+    image: hackathon-write-service:1.0
+    environment:
+      - CONFIG_SERVER_HOST=ho-config-server
+      - CONFIG_SERVER_PORT=8888
+    restart: always  
+    depends_on:
+      - ho-discovery-service
+      - ho-config-server
+    volumes:
+      - ./var/files:/var/files
+
+  ho-hackathon-read-service:
+    image: hackathon-read-service:1.0
+    environment:
+      - CONFIG_SERVER_HOST=ho-config-server
+      - CONFIG_SERVER_PORT=8888  
+    restart: always
+    depends_on:
+      - ho-discovery-service
+      - ho-config-server  
+    volumes:
+      - ./var/files:/var/files
+
+  ho-user-write-service:
+    image: user-write-service:1.0
+    environment:
+      - CONFIG_SERVER_HOST=ho-config-server
+      - CONFIG_SERVER_PORT=8888 
+    restart: always
+    depends_on:
+      - ho-discovery-service
+      - ho-config-server
+
+  ho-user-read-service:
+    image: user-read-service:1.0
+    environment:
+      - CONFIG_SERVER_HOST=ho-config-server
+      - CONFIG_SERVER_PORT=8888
+    restart: always 
+    depends_on:
+      - ho-discovery-service
+      - ho-config-server
+
 volumes:
   postgresql_master_data:
     driver: local
+
