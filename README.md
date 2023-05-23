@@ -26,6 +26,18 @@ The Hackathon Organizer is a great choice when you and your organization face th
 
 You can find more information about project Angular frontend [here](https://github.com/hackathon-organizer/hackathon-organizer)
 
+## Services: 
+Here you can find more details about certain services
+
+- [hackathon-write-service](https://github.com/hackathon-organizer/hackathon-write-service)
+- [hackathon-read-service](https://github.com/hackathon-organizer/hackathon-read-service)
+- [user-write-service](https://github.com/hackathon-organizer/user-write-service)
+- [user-read-service](https://github.com/hackathon-organizer/user-read-service)
+- [messaging-service](https://github.com/hackathon-organizer/messaging-service)
+- [discovery-service](https://github.com/hackathon-organizer/discovery-service)
+- [config-server](https://github.com/hackathon-organizer/config-server)
+- [api-gateway](https://github.com/hackathon-organizer/api-gateway)
+
 ## How to run
 
 Application works in microservices architecture. In order to start you need to have Docker and Docker Compose installed.
