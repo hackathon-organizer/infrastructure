@@ -36,7 +36,16 @@ Simply use `docker compose up` command
 
 ### Production mode
 
-You need to add env variables in `.env` file before runnging production. After that you can use `docker compose -f docker-compose-prod.yml up` to start project 
+You need to add env variables in `.env` file before running production. After that you can use `docker compose -f docker-compose-prod.yml up` to start project 
 
 ## Build with
+
+- SpringBoot
+- Docker
+- [Netflix Eureka](https://github.com/Netflix/eureka)
+- [Keycloak](https://www.keycloak.org/)
+- [HashiCorp Vault](https://www.vaultproject.io/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Testcontainers](https://www.testcontainers.org/)
+- [OpenVidu](https://openvidu.io/)
 
