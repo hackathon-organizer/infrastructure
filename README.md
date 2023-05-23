@@ -44,11 +44,11 @@ Application works in microservices architecture. In order to start you need to h
 
 ### Development mode
 
-Simply use `docker compose up` command
+Certain services must be build locally using `docker build -t container-name:1.0 .` For example use `docker build -t hackathon-write-service:1.11 .` in project folder after files modifictaion. If services are build you can use `docker compose up` command.
 
 ### Production mode
 
-You need to add env variables in `.env` file before running production. After that you can use `docker compose -f docker-compose-prod.yml up` to start project 
+You need to add env variables in `.env` file before running production. After that you can use `docker compose -f docker-compose-prod.yml up` to start project. Containers will be automatically downloaded from container registry.
 
 ## Build with
 
