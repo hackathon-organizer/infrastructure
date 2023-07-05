@@ -16,12 +16,12 @@ services:
 
   ho-keycloak:
     container_name: ho-keycloak
-    image: quay.io/keycloak/keycloak:16.1.1
+    image: quay.io/keycloak/keycloak:20.0.5
     ports:
       - "8080:8080"
     environment:
-      - KEYCLOAK_USER=admin
-      - KEYCLOAK_PASSWORD=admin
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
       - KK_TO_RMQ_URL=ho-rabbitmq
       - KK_TO_RMQ_PORT=5672
       - KK_TO_RMQ_USERNAME=guest
@@ -29,15 +29,10 @@ services:
       - KK_TO_RMQ_VHOST=/
       - KEYCLOAK_IMPORT=/tmp/realm-export.json
     volumes:
-<<<<<<< HEAD
-      - ./dev/resources/keycloak-to-rabbit-3.0.jar:/opt/jboss/keycloak/standalone/deployments/keycloak-to-rabbit-3.0.jar
+      - ./dev/resources/keycloak-to-rabbit-3.0.2.jar:/opt/keycloak/providers/keycloak-to-rabbit-3.0.2.jar
       - ./dev/configs/keycloak/realm-export.json:/tmp/realm-export.json
-      - ./dev/configs/keycloak/themes/ho-theme:/opt/jboss/keycloak/themes/ho-theme
-      - ./dev/configs/keycloak/scripts/disable-theme-cache.cli:/opt/jboss/startup-scripts/disable-theme-cache.cli
-=======
-      - ./resources/keycloak-to-rabbit-3.0.jar:/opt/jboss/keycloak/standalone/deployments/keycloak-to-rabbit-3.0.jar
-      - ./configs/keycloak/realm-export.json:/tmp/realm-export.json
->>>>>>> parent of 7a0078f (Add styles to keycloak login page)
+      - ./dev/configs/keycloak/themes/ho-theme:/opt/keycloak/themes/ho-theme
+    command: start-dev
   
   ho-vault:
     container_name: ho-vault
@@ -61,7 +56,6 @@ services:
     ports:
       - 8888:8888
     environment:
-<<<<<<< HEAD
       - VAULT_HOST=ho-vault
       - VAULT_PORT=8200
       - VAULT_TOKEN=hvs.ZZqcl357guUzC92VOuJFYLqn
@@ -71,24 +65,24 @@ services:
     container_name: ho-api-gateway
     image: api-gateway:1.0  
     ports:
-      - '9090:9090'
+      - 9090:9090
     environment:
       - CONFIG_SERVER_HOST=ho-config-server
       - CONFIG_SERVER_PORT=8888
     restart: always
     depends_on:
       - ho-discovery-service
-      - ho-config-server
-=======
-      - VAULT_URL=ho-vault
-      - VAULT_PORT=8200  
->>>>>>> parent of 7a0078f (Add styles to keycloak login page)
+      - ho-config-server     
 
   ho-discovery-service:
     container_name: ho-discovery-service
-    image: discovery-service:0.1
+    image: discovery-service:1.0
+    environment:
+      - CONFIG_SERVER_HOST=ho-config-server
+      - CONFIG_SERVER_PORT=8888
     ports:
       - 8761:8761
+    restart: always
 
   ho-postgresql-hackathon-master:
     image: docker.io/bitnami/postgresql:14
@@ -114,21 +108,6 @@ services:
       - POSTGRESQL_DATABASE=user_db
       - ALLOW_EMPTY_PASSWORD=yes
 
-  ho-postgresql-user-slave:
-    image: docker.io/bitnami/postgresql:14
-    ports:
-      - '5433:5432'
-    depends_on:
-      - ho-postgresql-user-master
-    environment:
-        - POSTGRESQL_REPLICATION_MODE=slave
-        - POSTGRESQL_REPLICATION_USER=repl_user
-        - POSTGRESQL_REPLICATION_PASSWORD=repl_password
-        - POSTGRESQL_MASTER_HOST=ho-postgresql-user-master
-        - POSTGRESQL_PASSWORD=qwerty
-        - POSTGRESQL_MASTER_PORT_NUMBER=5432
-        - ALLOW_EMPTY_PASSWORD=yes
-
   ho-postgresql-messaging-master:
     image: docker.io/bitnami/postgresql:14
     ports:
@@ -137,11 +116,10 @@ services:
       - POSTGRESQL_USERNAME=postgres
       - POSTGRESQL_PASSWORD=qwerty
       - POSTGRESQL_DATABASE=messaging_db
-<<<<<<< HEAD
     restart: always
 
   ho-media-server:
-    image: openvidu/openvidu-dev:2.24.0
+    image: openvidu/openvidu-dev:2.26.0
     ports:
       - '4443:4443'
     environment:
@@ -203,9 +181,6 @@ services:
       - ho-discovery-service
       - ho-config-server
 
-=======
-          
->>>>>>> parent of 7a0078f (Add styles to keycloak login page)
 volumes:
   postgresql_master_data:
     driver: local

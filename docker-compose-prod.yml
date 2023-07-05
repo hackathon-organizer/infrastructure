@@ -19,7 +19,7 @@ services:
     container_name: ho-keycloak
     image: quay.io/keycloak/keycloak:16.1.1
     ports:
-      - 8080:8080
+      - 8443:8443
     environment:
       - KEYCLOAK_USER=${KEYCLOAK_LOGIN}
       - KEYCLOAK_PASSWORD=${KEYCLOAK_PASSWORD}
@@ -62,7 +62,7 @@ services:
 
   ho-api-gateway:
     container_name: ho-api-gateway
-    image: api-gateway:1.0  
+    image: ghcr.io/tegridy/api-gateway:1.0  
     ports:
       - 9090:9090
     environment:
@@ -123,6 +123,7 @@ services:
     depends_on:
       - ho-discovery-service
       - ho-config-server
+    restart: always
 
   ho-media-server:
     image: openvidu/openvidu-dev:2.24.0
