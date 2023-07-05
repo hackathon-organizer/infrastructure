@@ -24,7 +24,7 @@ The Hackathon Organizer is a great choice when you and your organization face th
 
 ## Frontend
 
-You can find more information about project Angular frontend [here](https://github.com/hackathon-organizer/hackathon-organizer)
+You can find more information about Angular frontend [here](https://github.com/hackathon-organizer/hackathon-organizer)
 
 ## Services: 
 Here you can find more details about certain services
@@ -45,6 +45,8 @@ Application works in microservices architecture. In order to start you need to h
 ### Development mode
 
 Certain services must be build locally using `docker build -t container-name:1.0 .` For example use `docker build -t hackathon-write-service:1.11 .` in project folder after files modifictaion. If services are build you can use `docker compose up` command.
+
+To unlock Vault in development mode use keys from vault-dev.txt file.
 
 ### Production mode
 
