@@ -40,11 +40,11 @@ Here you can find more details about certain services
 
 ## How to run
 
-Application works in microservices architecture. In order to start you need to have Docker and Docker Compose installed.
+Application work in microservices architecture. In order to start you need to have Docker and Docker Compose installed.
 
 ### Development mode
 
-Certain services must be build locally using `docker build -t container-name:1.0 .` For example use `docker build -t hackathon-write-service:1.11 .` in project folder after files modifictaion. If services are build you can use `docker compose up` command.
+Certain services must be built locally using `docker build -t container-name:1.0 .` For example use `docker build -t hackathon-write-service:1.11 .` in project folder after files modification. If services are built you can use `docker compose up` command.
 
 To unlock Vault in development mode use keys from vault-dev.txt file.
 
